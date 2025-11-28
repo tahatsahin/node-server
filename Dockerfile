@@ -21,13 +21,13 @@ WORKDIR /app
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S nodejs -u 1001
 
 # Copy built app from builder stage
 COPY --from=builder --chown=nextjs:nodejs /app /app
 
 # Switch to non-root user
-USER nextjs
+USER nodejs
 
 # Expose port
 EXPOSE 8880
