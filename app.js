@@ -1,10 +1,19 @@
+const dotenv = require('dotenv')
 const express = require('express')
 const app = express()
 const PORT = 8880;
 
+dotenv.config();
+const USERNAME = process.env.USERNAME;
+const PASSWORD = process.env.PASSWORD;
+const SECRET_MESSAGE = process.env.SECRETMESSAGE;
+
+
 function basicAuth(req, res, next) {
   const auth = req.headers['authorization'];
-  if (auth === 'Basic admin') {
+ 
+  console.log(JSON.stringify(req.headers));
+  if (auth === `Basic ${USERNAME}:${PASSWORD}`) {
     return next();
   }
 
@@ -18,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/secret', basicAuth, (req, res) => {
-  res.send('This is a secret!');
+  res.send(`${SECRET_MESSAGE}`);
 });
 
 app.listen(PORT, () => {

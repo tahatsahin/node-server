@@ -1,0 +1,39 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+# Set WD
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY . .
+
+# Production stage
+FROM node:20-alpine AS production
+
+# Create app directory
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001
+
+# Copy built app from builder stage
+COPY --from=builder --chown=nextjs:nodejs /app /app
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 8880
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD node -e "require('http').get('http://localhost:8880', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+
+# Start the app
+CMD ["node", "app.js"]
