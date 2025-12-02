@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  app:
+    image: "{{ docker_app_image }}"
+    container_name: "{{ app_name }}"
+    env_file: 
+      - .env
+    ports:
+      - "127.0.0.1:{{ docker_app_port }}:{{ docker_app_port }}"
+    restart: unless-stopped

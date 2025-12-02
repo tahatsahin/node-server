@@ -1,0 +1,11 @@
+---
+- hosts: app_servers
+  become: true
+
+  vars_files:
+    - ../vault/prod-secrets.yml
+    - ../group_vars/app_servers.yml
+
+  roles:
+    - ../roles/common
+    - ../roles/app

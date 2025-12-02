@@ -1,0 +1,35 @@
+---
+- name: include secrets
+  include_vars:
+    file: "{{ playbook_dir }}/../vault/prod-secrets.yml"
+  no_log: true
+
+- name: create app directory
+  file: 
+    path: "{{ app_dir }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: render env file
+  template:
+    src: env.j2
+    dest: "{{ app_dir }}/.env"
+    mode: '0600'
+  become: true
+
+- name: render docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ app_dir }}/docker-compose.yml"
+    mode: '0644'
+  become: true
+
+- name: pull and start app via docker compose
+  ansible.builtin.shell: | 
+    cd {{ app_dir }}
+    docker compose pull
+    docker compose up -d
+  args: 
+    executable: /bin/bash
+  become: true
