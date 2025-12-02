@@ -1,9 +1,11 @@
 {
-  "name": "tahatsahin-web",
+  "name": "my-app",
   "version": "1.0.0",
   "description": "basic node server",
-  "main": "app.js",
+  "main": "dist/app.js",
   "scripts": {
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "start": "node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

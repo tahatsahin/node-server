@@ -7,7 +7,7 @@ dotenv.config();
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;
 const SECRET_MESSAGE = process.env.SECRETMESSAGE;
-
+const PORT = process.env.PORT | 3000;
 
 function basicAuth(req, res, next) {
   const auth = req.headers['authorization'];
